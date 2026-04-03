@@ -127,5 +127,45 @@ describe("User Registration Integration Tests", () => {
       const data = await response.json() as { error: string };
       expect(data.error).toBe("Validation failed");
     }, 20000);
+
+    it("should fail with invalid email format", async () => {
+      const payload = {
+        name: "Test User",
+        email: "not-an-email",
+        password: "password123",
+      };
+
+      const response = await app.handle(
+        new Request("http://localhost/api/user/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+      );
+
+      expect(response.status).toBe(400);
+      const data = await response.json() as { error: string };
+      expect(data.error).toBe("Validation failed");
+    }, 20000);
+
+    it("should fail with too short password (min 8)", async () => {
+      const payload = {
+        name: "Test User",
+        email: "short@example.com",
+        password: "short",
+      };
+
+      const response = await app.handle(
+        new Request("http://localhost/api/user/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+      );
+
+      expect(response.status).toBe(400);
+      const data = await response.json() as { error: string };
+      expect(data.error).toBe("Validation failed");
+    }, 20000);
   });
 });

@@ -9,8 +9,8 @@ export const userRoutes = new Elysia({ prefix: "/api/user" })
   }, {
     body: t.Object({
       name: t.String(),
-      email: t.String(),
-      password: t.String(),
+      email: t.String({ format: "email" }),
+      password: t.String({ minLength: 8 }),
     })
   })
   .post("/login", async ({ body }) => {
@@ -21,7 +21,7 @@ export const userRoutes = new Elysia({ prefix: "/api/user" })
     };
   }, {
     body: t.Object({
-      email: t.String(),
+      email: t.String({ format: "email" }),
       password: t.String(),
     })
   })

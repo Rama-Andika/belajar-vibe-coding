@@ -89,4 +89,40 @@ describe("User Logout Integration Tests", () => {
     const result = (await response.json()) as { error: string };
     expect(result.error).toBe("unauthorized");
   }, 20000);
+
+  it("should fail with invalid token format (not Bearer)", async () => {
+    const response = await app.handle(
+      new Request("http://localhost/api/user/logout", {
+        method: "DELETE",
+        headers: { 
+          "Authorization": "Basic token123" 
+        },
+      })
+    );
+
+    expect(response.status).toBe(401);
+    const result = (await response.json()) as { error: string };
+    expect(result.error).toBe("unauthorized");
+  }, 20000);
+
+  it("should fail with valid UUID format but non-existent token", async () => {
+    const fakeToken = crypto.randomUUID();
+    const response = await app.handle(
+      new Request("http://localhost/api/user/logout", {
+        method: "DELETE",
+        headers: { 
+          "Authorization": `Bearer ${fakeToken}` 
+        },
+      })
+    );
+
+    // Our derive middleware doesn't check the DB, 
+    // but the service should probably be idempotent OR throw unauthorized.
+    // Currently, service just tries to delete.
+    // If it's not in DB, it's still technically 'success' (logged out/no session).
+    // Let's verify our implementation.
+    expect(response.status).toBe(200);
+    const result = (await response.json()) as { message: string };
+    expect(result.message).toBe("Ok");
+  }, 20000);
 });

@@ -72,4 +72,38 @@ describe("User Login Integration Tests", () => {
     const data = (await response.json()) as { error: string };
     expect(data.error).toBe("email or password is not valid!");
   }, 20000);
+
+  it("should fail when user does not exist", async () => {
+    const response = await app.handle(
+      new Request("http://localhost/api/user/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: "nonexistent@example.com",
+          password: "password123",
+        }),
+      })
+    );
+
+    expect(response.status).toBe(401);
+    const data = (await response.json()) as { error: string };
+    expect(data.error).toBe("email or password is not valid!");
+  }, 20000);
+
+  it("should fail with invalid email format", async () => {
+    const response = await app.handle(
+      new Request("http://localhost/api/user/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: "not-an-email",
+          password: "password123",
+        }),
+      })
+    );
+
+    expect(response.status).toBe(400);
+    const data = (await response.json()) as { error: string };
+    expect(data.error).toBe("Validation failed");
+  }, 20000);
 });
