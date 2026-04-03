@@ -90,3 +90,12 @@ export const getCurrentUser = async (token: string) => {
     data: result,
   };
 };
+
+export const logoutUser = async (token: string) => {
+  // Delete session by token
+  await db.delete(session).where(eq(session.token, token));
+
+  return {
+    message: "Ok",
+  };
+};
