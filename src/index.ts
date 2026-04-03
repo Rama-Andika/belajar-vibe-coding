@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 import { db } from "./db";
 import { users } from "./db/schema";
-import { userRoutes } from "./routes/user_routes";
+import { userRoutes } from "./routes/user-route";
 
 export const app = new Elysia()
   .get("/", () => ({ message: "Hello from ElysiaJS + Bun!" }))
