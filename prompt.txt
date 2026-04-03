@@ -1,0 +1,8 @@
+buatkan saya file issue.md dengan tujuan untuk pembuatan planing sebagai berikut:
+buat projek baru di dalam folder ini dengan menggunakan bun dan tools berikut:
+- bun
+- ElysiaJs
+- Mysql
+- Drizzle
+buatkanlah secara high level saja, tidak perlu terlalu detail. planning ini akan
+digunakan oleh junior developer atau bahkan model AI yang lebih murah.
