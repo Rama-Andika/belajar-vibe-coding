@@ -8,7 +8,7 @@ export const userRoutes = new Elysia({ prefix: "/api/user" })
     return { message: "Ok" };
   }, {
     body: t.Object({
-      name: t.String(),
+      name: t.String({ maxLength: 255 }),
       email: t.String({ format: "email" }),
       password: t.String({ minLength: 8 }),
     })
