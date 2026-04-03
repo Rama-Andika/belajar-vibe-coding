@@ -13,6 +13,6 @@ export const users = mysqlTable("users", {
 export const session = mysqlTable("session", {
   id: int("id").primaryKey().autoincrement(),
   token: varchar("token", { length: 255 }).notNull(),
-  userId: int("user_id").notNull().references(() => users.id),
+  userId: int("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
 });

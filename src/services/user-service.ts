@@ -2,19 +2,20 @@ import bcrypt from "bcryptjs";
 import { db } from "../db";
 import { users, session } from "../db/schema";
 import { eq, or } from "drizzle-orm";
+import { ConflictError, UnauthorizedError } from "../utils/errors";
 
 export const registerUser = async (data: { name: string; email: string; password: string }) => {
   const { name, email, password } = data;
 
   // Check if user already exists
-  const existingUser = await db
+  const [existingUser] = await db
     .select()
     .from(users)
     .where(eq(users.email, email))
     .limit(1);
 
-  if (existingUser.length > 0) {
-    throw new Error("username or email already exists");
+  if (existingUser) {
+    throw new ConflictError("username or email already exists");
   }
 
   // Hash password
@@ -28,7 +29,7 @@ export const registerUser = async (data: { name: string; email: string; password
     password: hashedPassword,
   });
 
-  return { message: "Ok" };
+  return true;
 };
 
 export const loginUser = async (data: { email: string; password: string }) => {
@@ -42,13 +43,13 @@ export const loginUser = async (data: { email: string; password: string }) => {
     .limit(1);
 
   if (!user) {
-    throw new Error("email or password is not valid!");
+    throw new UnauthorizedError("email or password is not valid!");
   }
 
   // Verify password
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    throw new Error("email or password is not valid!");
+    throw new UnauthorizedError("email or password is not valid!");
   }
 
   // Generate session token (UUID)
@@ -60,10 +61,7 @@ export const loginUser = async (data: { email: string; password: string }) => {
     userId: user.id,
   });
 
-  return {
-    message: "Ok",
-    data: token,
-  };
+  return token;
 };
 
 export const getCurrentUser = async (token: string) => {
@@ -82,20 +80,15 @@ export const getCurrentUser = async (token: string) => {
     .limit(1);
 
   if (!result) {
-    throw new Error("unauthorized");
+    throw new UnauthorizedError();
   }
 
-  return {
-    message: "Ok",
-    data: result,
-  };
+  return result;
 };
 
 export const logoutUser = async (token: string) => {
   // Delete session by token
-  await db.delete(session).where(eq(session.token, token));
+  const result = await db.delete(session).where(eq(session.token, token));
 
-  return {
-    message: "Ok",
-  };
+  return true;
 };

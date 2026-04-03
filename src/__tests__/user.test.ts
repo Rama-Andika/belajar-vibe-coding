@@ -4,6 +4,7 @@ import { db } from "../db";
 import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
+import { registerUser } from "../services/user-service";
 
 describe("User Registration Integration Tests", () => {
   
@@ -20,10 +21,9 @@ describe("User Registration Integration Tests", () => {
         password: "password123",
       };
 
-      const { registerUser } = await import("../services/user-service");
       const result = await registerUser(userData);
 
-      expect(result.message).toBe("Ok");
+      expect(result).toBe(true);
 
       const [storedUser] = await db.select().from(users).where(eq(users.email, userData.email));
       expect(storedUser).toBeDefined();
@@ -44,7 +44,6 @@ describe("User Registration Integration Tests", () => {
         password: "password123",
       };
 
-      const { registerUser } = await import("../services/user-service");
       await registerUser(userData);
 
       // Try registering again with the same email
@@ -123,8 +122,10 @@ describe("User Registration Integration Tests", () => {
         })
       );
 
-      // Elysia returns 422 for validation fail by default
-      expect(response.status).toBe(422);
+      // We now handle validation as 400 with a custom error object
+      expect(response.status).toBe(400);
+      const data = await response.json() as { error: string };
+      expect(data.error).toBe("Validation failed");
     }, 20000);
   });
 });
