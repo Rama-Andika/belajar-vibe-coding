@@ -20,7 +20,7 @@ describe("User Registration Integration Tests", () => {
         password: "password123",
       };
 
-      const { registerUser } = await import("../services/user_service");
+      const { registerUser } = await import("../services/user-service");
       const result = await registerUser(userData);
 
       expect(result.message).toBe("Ok");
@@ -44,7 +44,7 @@ describe("User Registration Integration Tests", () => {
         password: "password123",
       };
 
-      const { registerUser } = await import("../services/user_service");
+      const { registerUser } = await import("../services/user-service");
       await registerUser(userData);
 
       // Try registering again with the same email
