@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeEach } from "bun:test";
-import { app } from "../index";
-import { db } from "../db";
-import { users, session } from "../db/schema";
+import { app } from "../src/index";
+import { db } from "../src/db";
+import { users, session } from "../src/db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 

@@ -1,10 +1,10 @@
 import { describe, expect, it, beforeAll, beforeEach } from "bun:test";
-import { app } from "../index";
-import { db } from "../db";
-import { users } from "../db/schema";
+import { app } from "../src/index";
+import { db } from "../src/db";
+import { users } from "../src/db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
-import { registerUser } from "../services/user-service";
+import { registerUser } from "../src/services/user-service";
 
 describe("User Registration Integration Tests", () => {
   

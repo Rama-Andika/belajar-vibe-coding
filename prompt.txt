@@ -1,28 +1,29 @@
 buatkan saya file issue.md dengan tujuan untuk pembuatan planing sebagai berikut:
 
-1. buatlah table users dengan kolom:
-- id (primary key, auto increment)
-- name (varchar, not null)
-- email (varchar, not null, unique)
-- password (varchar, not null, hash with bcrypt)
-- created_at (timestamp, default current timestamp)
-- updated_at (timestamp, default current timestamp)
+1. buatkan api untuk logout user
+- method delete
+- endpoint /api/user/logout
+- request header 
+  {
+    "Authorization": "Bearer <token> (token didapatkan dari login)"
+  }
+- response 
+  - success: 
+    {
+      "message": "Ok"
+    }
+  - failed: {"error": "unauthorized"}
 
-2. buatlah endpoint untuk registrasi user:
-- method post
-- endpoint /api/user/register
-- body (json): {"name": "", "email": "", "password": ""}
-- response (json): 
-  - success: {"message" : "Ok"}
-  - failed: {"error": "username or email already exists"}
+jika logout berhasil, maka hapus data session yang berada di table session berdasarkan token yang dikirimkan
 
-3. ikuti rules berikut untuk struktur folder dan format nama file di masing-masing folder:
-- di dalam folder src:
-  - buatkan dua folder yaitu:
-    1. routes -> folder ini untuk menyimpan file routing dari elysiajs, format nama file misalnya user_routes.ts
-    2. services -> folder ini untuk menyimpan logic bisnis, format nama file misalnya user_service.ts
+struktur folder di dalam src:
+- routes: ini berisikan file routing dari elysiajs
+- services: ini berisikan logic bisnis dari aplikasi
+
+format file
+- routes: menggunakan format file misalnya user-route.ts
+- services: menggunakan format file misalnya user-service.ts
 
 
-jelaskan tahapan-tahapanya untuk implementasi di atas, buatlah secara jelas dan detail karena
-nantinya yang mengimplementasikan adalah junior developer atau model AI yang lebih
-murah.
+jelaskan tahapan-tahapannya untuk implementasi fitur ini, kamu anggap yang nanti mengimplementasikannya
+adalah junior programmer atau model AI yang lebih murah.
