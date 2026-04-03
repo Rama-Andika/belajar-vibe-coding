@@ -65,3 +65,28 @@ export const loginUser = async (data: { email: string; password: string }) => {
     data: token,
   };
 };
+
+export const getCurrentUser = async (token: string) => {
+  // Join session and users
+  const [result] = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      createdAt: users.createdAt,
+      updatedAt: users.updatedAt,
+    })
+    .from(session)
+    .innerJoin(users, eq(session.userId, users.id))
+    .where(eq(session.token, token))
+    .limit(1);
+
+  if (!result) {
+    throw new Error("unauthorized");
+  }
+
+  return {
+    message: "Ok",
+    data: result,
+  };
+};
